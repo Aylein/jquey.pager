@@ -35,13 +35,12 @@
         lastClass: "page_last",
         lastText: ">>",
         redirect: true,
-        callbackPara: { },
-        callback: function (page) { }
+        callbackPara: {},
+        callback: function (page, obj) { }
     };
     $.fn.pager = function (options) {
         options = $.extend(defaults, options);
-        var num = this.length;
-        var i = 0;
+        if (options.totalPage <= 1) return this;
         return this.each(function () {
             makePager($(this), options);
         });
@@ -49,18 +48,17 @@
     $.Pager = function (selector, options) {
         options = $.extend(defaults, options);
         selector = $(selector);
-        var num = selector.length;
-        var i = 0;
+        if (options.totalPage <= 1) return selector;
         return selector.each(function () {
             makePager($(this), options);
         });
     }
     $.fn.pager.prototype = {};
     var makeJson = function (page, options) {
-        return { pagenum: page, pagesize: options.pageSize, totalnum: options.totalNumber, totalpage: options.totalPage };
+        return { pagenum: parseInt(page), pagesize: parseInt(options.pageSize), totalnum: parseInt(options.totalNumber), totalpage: parseInt(options.totalPage) };
     }
-    var makeUrl = function (options, n) { 
-    	return options.url.replace(/-y-/g, n.toString()) + options.search;
+    var makeUrl = function (options, n) {
+        return options.url.replace(/-y-/g, n.toString()) + options.search;
     }
     var makeOnClick = function (i, selector, options) {
         if (i < 1 || i > options.totalPage || (i == options.pageNumber && !options.redirectCurrent)) {
@@ -95,7 +93,7 @@
             p = $("<" + options.tag + "></" + options.tag + ">");
             p.text(options.firstText).attr("page", n).addClass(sign).addClass(options.firstClass);
             if (options.pageNumber > 1) p.attr("href", makeUrl(options, 1));
-            else if(options.pageNumber == 1 && options.redirectCurrent) p.attr("href", makeUrl(options, 1));
+            else if (options.pageNumber == 1 && options.redirectCurrent) p.attr("href", makeUrl(options, 1));
             else p.attr("href", nourl);
             makeOnClick(n, p, options);
             selector.append(p);
@@ -116,9 +114,9 @@
                     p = $("<" + options.tag + "></" + options.tag + ">");
                     p.text(i).attr("page", n).addClass(sign).addClass(options.pageClass);
                     if (n == options.pageNumber) {
-                            p.addClass(options.currentPageClass);
-                            if(options.redirectCurrent) p.attr("href", makeUrl(options, n));
-                            else p.attr("href", nourl);
+                        p.addClass(options.currentPageClass);
+                        if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
+                        else p.attr("href", nourl);
                     }
                     else p.attr("href", makeUrl(options, n));
                     makeOnClick(n, p, options);
@@ -133,7 +131,7 @@
                         p.text(i).attr("page", n).addClass(sign).addClass(options.pageClass);
                         if (n == options.pageNumber) {
                             p.addClass(options.currentPageClass);
-                            if(options.redirectCurrent) p.attr("href", makeUrl(options, n));
+                            if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
                             else p.attr("href", nourl);
                         }
                         else p.attr("href", makeUrl(options, n));
@@ -148,7 +146,7 @@
                         p.text(n).attr("page", n).addClass(sign).addClass(options.pageClass);
                         if (n == options.pageNumber) {
                             p.addClass(options.currentPageClass);
-                            if(options.redirectCurrent) p.attr("href", makeUrl(options, n));
+                            if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
                             else p.attr("href", nourl);
                         }
                         else p.attr("href", makeUrl(options, n));
@@ -163,7 +161,7 @@
                         p.text(n).attr("page", n).addClass(sign).addClass(options.pageClass);
                         if (n == options.pageNumber) {
                             p.addClass(options.currentPageClass);
-                            if(options.redirectCurrent) p.attr("href", makeUrl(options, n));
+                            if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
                             else p.attr("href", nourl);
                         }
                         else p.attr("href", makeUrl(options, n));
@@ -209,7 +207,7 @@
                         if (m == "" || m < 1 || m > options.totalPage) return false;
                         if (typeof (options.callback) == "function")
                             options.callback({ pagenum: m, pagesize: options.pageSize, totalnum: options.totalNumber, totalpage: options.totalPage }, options.callbackPara);
-                        if(m == options.pageNumber && !options.redirectCurrent) return false;
+                        if (m == options.pageNumber && !options.redirectCurrent) return false;
                         else window.location = makeUrl(options, m);
                     });
                 }
@@ -221,7 +219,7 @@
             p = $("<" + options.tag + "></" + options.tag + ">");
             p.text(options.nextText).attr("page", n).addClass(sign).addClass(options.nextClass);
             if (n < options.totalPage * 1 + 1) p.attr("href", makeUrl(options, n));
-            else if(n  == options.totalPage * 1 + 1 && options.redirectCurrent) p.attr("href", makeUrl(options, n));
+            else if (n == options.totalPage * 1 + 1 && options.redirectCurrent) p.attr("href", makeUrl(options, n));
             else p.attr("href", nourl);
             makeOnClick(n, p, options);
             selector.append(p);
@@ -231,7 +229,7 @@
             p = $("<" + options.tag + "></" + options.tag + ">");
             p.text(options.lastText).attr("page", n).addClass(sign).addClass(options.lastClass);
             if (options.pageNumber < n) p.attr("href", makeUrl(options, n));
-            else if(n  == options.pageNumber && options.redirectCurrent) p.attr("href", makeUrl(options, n));
+            else if (n == options.pageNumber && options.redirectCurrent) p.attr("href", makeUrl(options, n));
             else p.attr("href", nourl);
             makeOnClick(n, p, options);
             selector.append(p);

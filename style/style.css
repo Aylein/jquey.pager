@@ -1,0 +1,15 @@
+﻿a { text-decoration: none; }
+a:hover { text-decoration: none; }
+.pager_ao { margin-left: 15px; display: inline-block; border: 1px solid #CCC; color: #CCC; padding: 4px; font-size: 12px; text-align: center; }
+.page_first:hover { background-color: #CCC; color: #FFF; }
+.page_previous:hover { background-color: #CCC; color: #FFF; }
+.page_item:hover { background-color: #CCC; color: #FFF; }
+.page_next:hover { background-color: #CCC; color: #FFF; }
+.page_last:hover { background-color: #CCC; color: #FFF; }
+.page_current { background-color: #CCC; color: #FFF; }
+.page_first { width: 40px; }
+.page_previous { width: 40px; }
+.page_total { border: 0px; font-size: 14px; }
+.page_next { width: 40px; }
+.page_last { width: 40px; }
+.page_item { width: 30px; }
