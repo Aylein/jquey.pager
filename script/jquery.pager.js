@@ -1,53 +1,54 @@
 ﻿(function ($) {
-    var defaults = {
-        sign: "ao",
-        tag: "a",
-        url: "",
-        search: "",
-        showPageNumber: 5,
-        pageNumber: 1,
-        pageSize: 0,
-        totalPage: 1,
-        totalNumber: 0,
-        showFirst: true,
-        firstClass: "page_first",
-        firstText: "<<",
-        showPrevious: true,
-        previousClass: "page_previous",
-        previousText: "<",
-        showPage: true,
-        pageClass: "page_item",
-        currentPageClass: "page_current",
-        redirectCurrent: false,
-        showTotal: false,
-        totalClass: "page_total",
-        totalText: "-y-/-Y-",
-        showTurnto: false,
-        turntoClass: "page_turnto",
-        turntoText: "GO",
-        turntoInputClass: "page_turntoinput",
-        turntoButtonClass: "page_turntobt",
-        turntoButtonText: "OK",
-        showNext: true,
-        nextClass: "page_next",
-        nextText: ">",
-        showLast: true,
-        lastClass: "page_last",
-        lastText: ">>",
-        redirect: true,
-        callbackPara: {},
-        callback: function (page, obj) { }
+    var Defaults = function () {
+        this.sign = "ao";
+        this.tag = "a";
+        this.url = "";
+        this.search = "";
+        this.showPageNumber = 5;
+        this.pageNumber = 1;
+        this.pageSize = 0;
+        this.totalPage = 1;
+        this.totalNumber = 0;
+        this.showFirst = true;
+        this.firstClass = "page_first";
+        this.firstText = "<<";
+        this.showPrevious = true;
+        this.previousClass = "page_previous";
+        this.previousText = "<";
+        this.showPage = true;
+        this.pageClass = "page_item";
+        this.currentPageClass = "page_current";
+        this.redirectCurrent = false;
+        this.showTotal = false;
+        this.totalClass = "page_total";
+        this.totalText = "-y-/-Y-";
+        this.showTurnto = false;
+        this.turntoClass = "page_turnto";
+        this.turntoText = "GO";
+        this.turntoInputClass = "page_turntoinput";
+        this.turntoButtonClass = "page_turntobt";
+        this.turntoButtonText = "OK";
+        this.showNext = true;
+        this.nextClass = "page_next";
+        this.nextText = ">";
+        this.showLast = true;
+        this.lastClass = "page_last";
+        this.lastText = ">>";
+        this.redirect = true;
+        this.callbackPara = {};
+        this.callback = function (page, obj) { };
     };
-    $.fn.pager = function (options) {
-        options = $.extend(defaults, options);
+    $.fn.pager = function (_options) {
+        var options = new Defaults();
+        options = $.extend(options, _options);
         if (options.totalPage <= 1) return this;
         return this.each(function () {
             makePager($(this), options);
         });
     }
-    $.Pager = function (selector, options) {
-        options = $.extend(defaults, options);
-        selector = $(selector);
+    $.Pager = function (selector, _options) {
+        var options = new Defaults();
+        options = $.extend(options, _options);
         if (options.totalPage <= 1) return selector;
         return selector.each(function () {
             makePager($(this), options);
@@ -66,10 +67,11 @@
         }
         else {
             if (!options.redirect) {
-                selector.on("click", function () {
+                selector.on("click", function (e) {
+                    if (i == Math.ceil(options.totalPage / 2) + 1) console.log(i);
                     if (typeof (options.callback) == "function")
                         options.callback(makeJson($(this).attr("page"), options), options.callbackPara);
-                    return false;
+                    e.preventDefault();
                 });
             }
             else {
