@@ -1,15 +1,16 @@
-﻿a { text-decoration: none; }
+﻿* { font-family: 'Microsoft YaHei UI'; }
+a { text-decoration: none; }
 a:hover { text-decoration: none; }
-.pager_ao { margin-left: 15px; display: inline-block; border: 1px solid #CCC; color: #CCC; padding: 4px; font-size: 12px; text-align: center; }
-.page_first:hover { background-color: #CCC; color: #FFF; }
-.page_previous:hover { background-color: #CCC; color: #FFF; }
-.page_item:hover { background-color: #CCC; color: #FFF; }
-.page_next:hover { background-color: #CCC; color: #FFF; }
-.page_last:hover { background-color: #CCC; color: #FFF; }
-.page_current { background-color: #CCC; color: #FFF; }
-.page_first { width: 40px; }
-.page_previous { width: 40px; }
-.page_total { border: 0px; font-size: 14px; }
-.page_next { width: 40px; }
-.page_last { width: 40px; }
-.page_item { width: 30px; }
+.pager_ao { display: inline-block; color: #CCC; padding: 4px; font-size: 12px; text-align: center; }
+.pager_ao_page_first:hover { background-color: #CCC; color: #FFF; }
+.pager_ao_page_previous:hover { background-color: #CCC; color: #FFF; }
+.pager_ao_page_item:hover { background-color: #CCC; color: #FFF; }
+.pager_ao_page_next:hover { background-color: #CCC; color: #FFF; }
+.pager_ao_page_last:hover { background-color: #CCC; color: #FFF; }
+.pager_ao_page_current { background-color: #CCC; color: #FFF; }
+.pager_ao_page_first { width: 40px; }
+.pager_ao_page_previous { width: 40px; }
+.pager_ao_page_total { border: 0px; font-size: 14px; }
+.pager_ao_page_next { width: 40px; }
+.pager_ao_page_last { width: 40px; }
+.pager_ao_space { color: #CCC; font-size: 12px; }

@@ -7,6 +7,26 @@ jquey.pager
 适用于不需要SEO优化的ajax加载列表分页使用
 代码有很多冗余 0 0~ 再努力一下其实可以写的更为简洁
 
+2014 - 12 - 11 
+修改了同一个页面加载多个分页时 option 中 回调函数 相互污染覆盖的错误
+现在可以在同一个页面加载多个不同事件的分页了
+
+2014 - 12 - 13
+增加了分页按钮间间隔字符的设置
+现在可以通过设置以下来去顶是否在分页按钮之间显示一些相同的字符
+option.showSpace = false; 是否显示分隔符
+option.spaceTag = "span"; 加载分隔符的标签名
+option.spaceClass = "space"; 分隔符标签的 css 样式类
+option.spaceCharacter = " | "; 分隔符
+
+为各个 css 样式类设置了前缀 前缀为 "pager" + option.sign + option.classSet
+栗子
+如果设置了 option.sign = "in"; option.firstClass = "csp"; 则声称的第一页按钮 css 样式类为 pager_in_csp
+默认情况下则生成 pager_ao_page_first 
+以此类推
+
+
+
 Options
 ===========
 
@@ -34,6 +54,23 @@ search
 -- string [""]
 -- 即get参数部分 此部分会原封不动加载url设置后 默认为空
 所以在传递值时 需要根据url参数和search参数中的写法 判断search的第一个字符为 & 或是 ?
+
+showSpace
+-- bool [false]
+-- 是否显示分隔符
+
+spaceTag
+-- string ["span"]
+-- 加载分隔符的标签名
+
+spaceClass
+-- string "space"
+-- 分隔符标签的 css 样式类
+此类名在加载后会被修改为 pager_[sign]_[spaceClass]
+
+spaceCharacter
+-- string [" | "]
+-- 分隔符
 
 showPageNumber 
 -- number [5]
@@ -75,6 +112,7 @@ firstClass
 -- string ["page_first"]
 -- 第一页按钮的样式类名
 默认情况下 第一页 会带有 pager_[sign] 的类名和 page_first 类名 所以请编辑样式 使得 page_first 中的样式可以覆盖 pager_[sign] 类中的样式
+此类名在加载后会被修改为 pager_[sign]_[firstClass]
 
 firstText
 -- string ["<<"]
@@ -88,6 +126,7 @@ previousClass
 -- string ["page_previous"]
 -- 上一页按钮的样式类名
 默认情况下 上一页 会带有 pager_[sign] 的类名和 page_previous 类名 所以请编辑样式 使得 page_previous 中的样式可以覆盖 pager_[sign] 类中的样式
+此类名在加载后会被修改为 pager_[sign]_[previousClass]
 
 previousText 
 -- string ["<"]
@@ -101,11 +140,13 @@ pageClass
 -- string ["page_item"]
 -- 分页按钮的 css 类名
 默认情况下 按钮 会带有 pager_[sign] 的类名和 page_item 类名 所以请编辑样式 使得 page_item 中的样式可以覆盖 pager_[sign] 类中的样式
+此类名在加载后会被修改为 pager_[sign]_[pageClass]
 
 currentPageClass
 -- string ["page_current"]
 -- 当前页页码按钮样式 即当前被选中的页码样式
 改样式不影响 第一页 上一页 下一页 最后一页按钮 为当前选中页码时的样式
+此类名在加载后会被修改为 pager_[sign]_[currentPageClass]
 
 redirectCurrent
 -- bool [false]
@@ -118,6 +159,7 @@ showTotal
 totalClass
 -- string ["page_total"]
 -- 总页数 css 类
+此类名在加载后会被修改为 pager_[sign]_[totalClass]
 
 totalText
 -- string ["-y-/-Y-"] -y- -Y-
@@ -130,6 +172,7 @@ showTurnto
 turntoClass
 -- string ["page_turnto"]
 -- 点击跳转至指定页码部分 css 样式类
+此类名在加载后会被修改为 pager_[sign]_[turntoClass]
 
 turntoText
 -- string ["GO"]
@@ -138,10 +181,12 @@ turntoText
 turntoInputClass
 -- string ["page_turntoinput"]
 -- 点击跳转至指定页码部分 中间输入框 css 样式类
+此类名在加载后会被修改为 pager_[sign]_[turntoInputClass]
 
 turntoButtonClass
 -- string ["page_turntobt"]
 -- 点击跳转至指定页码部分 后方按钮 css 样式类
+此类名在加载后会被修改为 pager_[sign]_[turntoButtonClass]
 
 turntoButtonText
 -- string ["OK"]
@@ -154,6 +199,7 @@ showNext
 nextClass
 -- string ["page_next"]
 -- 下一页按钮 css 样式类
+此类名在加载后会被修改为 pager_[sign]_[nextClass]
 
 nextText
 -- string [">"]
@@ -166,6 +212,7 @@ showLast
 lastClass
 -- string ["page_last"]
 -- 最后一页按钮 css 样式类
+此类名在加载后会被修改为 pager_[sign]_[lastClass]
 
 lastText
 -- string [">>"]

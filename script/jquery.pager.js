@@ -2,8 +2,12 @@
     var Defaults = function () {
         this.sign = "ao";
         this.tag = "a";
-        this.url = "";
+        this.url = "javascript: void(0);";
         this.search = "";
+        this.showSpace = false;
+        this.spaceTag = "span";
+        this.spaceClass = "space";
+        this.spaceCharacter = " | ";
         this.showPageNumber = 5;
         this.pageNumber = 1;
         this.pageSize = 0;
@@ -17,6 +21,7 @@
         this.previousText = "<";
         this.showPage = true;
         this.pageClass = "page_item";
+        this.pageText = "-y-";
         this.currentPageClass = "page_current";
         this.redirectCurrent = false;
         this.showTotal = false;
@@ -38,6 +43,18 @@
         this.callbackPara = {};
         this.callback = function (page, obj) { };
     };
+    var number = {
+        "0": "零",
+        "1": "一",
+        "2": "二",
+        "3": "三",
+        "4": "四",
+        "5": "五",
+        "6": "六",
+        "7": "七",
+        "8": "八",
+        "9": "九"
+    };
     $.fn.pager = function (_options) {
         var options = new Defaults();
         options = $.extend(options, _options);
@@ -45,7 +62,7 @@
         return this.each(function () {
             makePager($(this), options);
         });
-    }
+    };
     $.Pager = function (selector, _options) {
         var options = new Defaults();
         options = $.extend(options, _options);
@@ -53,14 +70,25 @@
         return selector.each(function () {
             makePager($(this), options);
         });
-    }
-    $.fn.pager.prototype = {};
+    };
+    $.fn.pager.prototype = $.Pager.prototype = {};
+    var makeText_fromNumber = function (n) {
+        return "";
+    };
+    var makePageText = function (n, options) {
+        if (options.pageText.indexOf("-y-") > -1)
+            return options.pageText.replace(/-y-/g, n.toString());
+        else if (options.pageText.indexOf("-Y-") > -1) {
+            return options.pageText.replace(/-Y-/g, makeText_fromNumber(n));
+        }
+        else return options.pageText;
+    };
     var makeJson = function (page, options) {
         return { pagenum: parseInt(page), pagesize: parseInt(options.pageSize), totalnum: parseInt(options.totalNumber), totalpage: parseInt(options.totalPage) };
-    }
+    };
     var makeUrl = function (options, n) {
         return options.url.replace(/-y-/g, n.toString()) + options.search;
-    }
+    };
     var makeOnClick = function (i, selector, options) {
         if (i < 1 || i > options.totalPage || (i == options.pageNumber && !options.redirectCurrent)) {
             if (!options.redirect) { selector.on("click", function () { return false; }); }
@@ -82,14 +110,26 @@
             }
         }
         return selector;
-    }
-
+    };
+    var makeSpace = function (options) {
+        return $("<" + options.spaceTag + "></" + options.spaceTag + ">").addClass(options.spaceClass).text(options.spaceCharacter);
+    };
     var makePager = function (selector, options) {
         var sign = "pager_" + options.sign;
-        var nourl = "javascript:void(0);";
+        options.spaceClass = sign + "_" + options.spaceClass;
+        options.firstClass = sign + "_" + options.firstClass;
+        options.previousClass = sign + "_" + options.previousClass;
+        options.pageClass = sign + "_" + options.pageClass;
+        options.currentPageClass = sign + "_" + options.currentPageClass;
+        options.totalClass = sign + "_" + options.totalClass;
+        options.turntoClass = sign + "_" + options.turntoClass;
+        options.turntoInputClass = sign + "_" + options.turntoInputClass;
+        options.turntoButtonClass = sign + "_" + options.turntoButtonClass;
+        options.nextClass = sign + "_" + options.nextClass;
+        options.lastClass = sign + "_" + options.lastClass;
+        var nourl = "javascript: void(0);";
         selector.empty();
-        var p;
-        var n;
+        var p, n;
         if (options.showFirst) {
             n = 1;
             p = $("<" + options.tag + "></" + options.tag + ">");
@@ -99,6 +139,7 @@
             else p.attr("href", nourl);
             makeOnClick(n, p, options);
             selector.append(p);
+            if (options.showSpace) selector.append(makeSpace(options));
         }
         if (options.showPrevious) {
             n = options.pageNumber - 1;
@@ -108,13 +149,14 @@
             else p.attr("href", nourl);
             makeOnClick(n, p, options);
             selector.append(p);
+            if (options.showSpace) selector.append(makeSpace(options));
         }
         if (options.showPage) {
             if (options.totalPage <= options.showPageNumber) {
                 for (var i = 1; i <= options.totalPage; i++) {
                     n = i;
                     p = $("<" + options.tag + "></" + options.tag + ">");
-                    p.text(i).attr("page", n).addClass(sign).addClass(options.pageClass);
+                    p.text(makePageText(i, options)).attr("page", n).addClass(sign).addClass(options.pageClass);
                     if (n == options.pageNumber) {
                         p.addClass(options.currentPageClass);
                         if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
@@ -123,6 +165,7 @@
                     else p.attr("href", makeUrl(options, n));
                     makeOnClick(n, p, options);
                     selector.append(p);
+                    if (options.showSpace) selector.append(makeSpace(options));
                 }
             }
             else {
@@ -130,7 +173,7 @@
                     for (var i = 1; i <= options.showPageNumber; i++) {
                         n = i;
                         p = $("<" + options.tag + "></" + options.tag + ">");
-                        p.text(i).attr("page", n).addClass(sign).addClass(options.pageClass);
+                        p.text(makePageText(i, options)).attr("page", n).addClass(sign).addClass(options.pageClass);
                         if (n == options.pageNumber) {
                             p.addClass(options.currentPageClass);
                             if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
@@ -139,13 +182,14 @@
                         else p.attr("href", makeUrl(options, n));
                         makeOnClick(n, p, options);
                         selector.append(p);
+                        if (options.showSpace) selector.append(makeSpace(options));
                     }
                 }
                 else if (options.pageNumber > options.totalPage - Math.ceil(options.showPageNumber / 2)) {
                     for (var i = 1; i <= options.showPageNumber; i++) {
                         n = options.totalPage - options.showPageNumber + i;
                         p = $("<" + options.tag + "></" + options.tag + ">");
-                        p.text(n).attr("page", n).addClass(sign).addClass(options.pageClass);
+                        p.text(makePageText(n, options)).attr("page", n).addClass(sign).addClass(options.pageClass);
                         if (n == options.pageNumber) {
                             p.addClass(options.currentPageClass);
                             if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
@@ -154,13 +198,14 @@
                         else p.attr("href", makeUrl(options, n));
                         makeOnClick(n, p, options);
                         selector.append(p);
+                        if (options.showSpace) selector.append(makeSpace(options));
                     }
                 }
                 else {
                     for (var i = 1; i <= options.showPageNumber; i++) {
                         n = options.pageNumber - Math.ceil((options.showPageNumber - 1) / 2) + i - 1;
                         p = $("<" + options.tag + "></" + options.tag + ">");
-                        p.text(n).attr("page", n).addClass(sign).addClass(options.pageClass);
+                        p.text(makePageText(n, options)).attr("page", n).addClass(sign).addClass(options.pageClass);
                         if (n == options.pageNumber) {
                             p.addClass(options.currentPageClass);
                             if (options.redirectCurrent) p.attr("href", makeUrl(options, n));
@@ -169,6 +214,7 @@
                         else p.attr("href", makeUrl(options, n));
                         makeOnClick(n, p, options);
                         selector.append(p);
+                        if (options.showSpace) selector.append(makeSpace(options));
                     }
                 }
             }
@@ -179,6 +225,7 @@
             p.addClass(sign).addClass(options.totalClass);
             p.text(n);
             selector.append(p);
+            if (options.showSpace) selector.append(makeSpace(options));
         }
         if (options.showTurnto) {
             p = $("<span></span>");
@@ -215,6 +262,7 @@
                 }
             })(p, options);
             selector.append(n);
+            if (options.showSpace) selector.append(makeSpace(options));
         }
         if (options.showNext) {
             n = options.pageNumber * 1 + 1;
@@ -225,6 +273,7 @@
             else p.attr("href", nourl);
             makeOnClick(n, p, options);
             selector.append(p);
+            if (options.showSpace) selector.append(makeSpace(options));
         }
         if (options.showLast) {
             n = options.totalPage * 1;
@@ -235,6 +284,8 @@
             else p.attr("href", nourl);
             makeOnClick(n, p, options);
             selector.append(p);
+            if (options.showSpace) selector.append(makeSpace(options));
         }
+        if (options.showSpace) selector.children().last().remove();
     };
 })(jQuery);

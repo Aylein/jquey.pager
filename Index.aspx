@@ -38,18 +38,16 @@
             });
         };
         var makePage = function (page) { 
-            if(page.totalpage <= 1) return;
+            if(page.totalpage <= 1) { $(".acg").html(""); return; }
             $(".acg").pager({
                 showPageNumber: 12, 
                 pageNumber: page.pagenum, 
                 pageSize: page.pagesize, 
                 totalNumber: page.totalnum, 
                 totalPage: page.totalpage, 
-                url: "index.aspx?page=-y-",
+                pageText: "第-y-页",
+                showSpace: true,
                 redirect: false,
-                //showTotal: true,
-                //showTurnto: true,
-                callbackPara: { a: page.pagenum + 1, b: page.totalpage },
                 callback: getList
             });
         };
