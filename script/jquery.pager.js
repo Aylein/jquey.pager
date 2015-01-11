@@ -43,18 +43,7 @@
         this.callbackPara = {};
         this.callback = function (page, obj) { };
     };
-    var number = {
-        "0": "零",
-        "1": "一",
-        "2": "二",
-        "3": "三",
-        "4": "四",
-        "5": "五",
-        "6": "六",
-        "7": "七",
-        "8": "八",
-        "9": "九"
-    };
+    var nourl = "javascript: void(0);";
     $.fn.pager = function (_options) {
         var options = new Defaults();
         options = $.extend(options, _options);
@@ -66,12 +55,20 @@
     $.Pager = function (selector, _options) {
         var options = new Defaults();
         options = $.extend(options, _options);
+        selector = $(selector);
         if (options.totalPage <= 1) return selector;
         return selector.each(function () {
             makePager($(this), options);
         });
     };
-    $.fn.pager.prototype = $.Pager.prototype = {};
+    $.fn.pager.prototype = $.Pager.prototype = {};  
+    var isEmptyObject = function( obj ) {
+        var name;
+        for ( name in obj ) {
+            return false;
+        }
+        return true;
+    };
     var makeText_fromNumber = function (n) {
         return "";
     };
@@ -87,7 +84,19 @@
         return { pagenum: parseInt(page), pagesize: parseInt(options.pageSize), totalnum: parseInt(options.totalNumber), totalpage: parseInt(options.totalPage) };
     };
     var makeUrl = function (options, n) {
-        return options.url.replace(/-y-/g, n.toString()) + options.search;
+        if(options.url == nourl) return nourl;
+        else return options.url.replace(/-y-/g, n.toString());
+    };
+    var makeSearch = function(options){
+        var url = options.url;
+        url += (url.indexOf("?") > 0 ? "&" : "?");
+        if(typeof options.search == "object" && !isEmptyObject(options.search))
+            for(var name in options.search) url += name + "=" + options.search[name] + "&";
+        else if(typeof options.search == "string" && options.search != ""){
+            if(options.search[0] == "?" || options.search[0] == "&") 
+                url += options.search.substr(1) + "&";
+        }
+        return url.length > 0 ? url.substr(0, url.length - 1) : url;
     };
     var makeOnClick = function (i, selector, options) {
         if (i < 1 || i > options.totalPage || (i == options.pageNumber && !options.redirectCurrent)) {
@@ -96,7 +105,6 @@
         else {
             if (!options.redirect) {
                 selector.on("click", function (e) {
-                    if (i == Math.ceil(options.totalPage / 2) + 1) console.log(i);
                     if (typeof (options.callback) == "function")
                         options.callback(makeJson($(this).attr("page"), options), options.callbackPara);
                     e.preventDefault();
@@ -127,7 +135,7 @@
         options.turntoButtonClass = sign + "_" + options.turntoButtonClass;
         options.nextClass = sign + "_" + options.nextClass;
         options.lastClass = sign + "_" + options.lastClass;
-        var nourl = "javascript: void(0);";
+        options.url = makeSearch(options);
         selector.empty();
         var p, n;
         if (options.showFirst) {

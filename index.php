@@ -1,9 +1,6 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Index, App_Web_index.aspx.cdcab7d2" %>
-
-<% 
-    int page = 1;
-    if (Request.QueryString["page"] != null) int.TryParse(Request.QueryString["page"].ToString(), out page);
-%>
+﻿<?php
+    $page = isset($_GET["page"]) ? intval($_GET["page"], 10) : 1;
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -19,11 +16,11 @@
 <script type="text/javascript">
     $(function () {
         var p = 0;
-        var pp = { pagenum: <%=page %> };
+        var pp = { pagenum: <?=$page ?> };
         var getList = function (page, obj) {    
             $.ajax({
                 type: "post",
-                url: "ajax/getlist.ashx",
+                url: "ajax/list.php",
                 data: { page: page.pagenum },
                 dataType: "Json",
                 success: function (data) { 
@@ -32,19 +29,23 @@
                         return;
                     }
                     var o = obj || { a: 1, b: 2 };
-                    //console.log(o);
                     makePage(data.page);
                 }
             });
         };
         var makePage = function (page) { 
-            if(page.totalpage <= 1) { $(".acg").html(""); return; }
+            if(page.totalpage <= 1) { 
+                $(".acg").html(""); 
+                return; 
+            }
             $(".acg").pager({
-                showPageNumber: 12, 
+                showPageNumber: 7, 
                 pageNumber: page.pagenum, 
                 pageSize: page.pagesize, 
                 totalNumber: page.totalnum, 
                 totalPage: page.totalpage, 
+                url: "index.php?page=-y-",
+                search: "&a=1",
                 pageText: "第-y-页",
                 showSpace: true,
                 redirect: false,
