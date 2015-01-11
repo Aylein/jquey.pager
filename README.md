@@ -22,9 +22,9 @@ option.spaceTag = "span"; 加载分隔符的标签名
 option.spaceClass = "space"; 分隔符标签的 css 样式类  
 option.spaceCharacter = " | "; 分隔符  
     
-2015 - 1 - 11
-现在 option.search 可以传递一个对象 或 字符串了
-不必再纠结 option.search 要以 ? 还是 & 开头 传递字符串时可以不写 ? 或是 &
+2015 - 1 - 11    
+现在 option.search 可以传递一个对象 或 字符串了    
+不必再纠结 option.search 要以 ? 还是 & 开头 传递字符串时可以不写 ? 或是 &    
   
 为各个 css 样式类设置了前缀 前缀为 "pager" + option.sign + option.classSet  
 栗子  
