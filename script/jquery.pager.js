@@ -1,5 +1,6 @@
 ﻿(function ($) {
     var Defaults = function () {
+        this.autoShow = true;
         this.sign = "ao";
         this.tag = "a";
         this.url = "javascript: void(0);";
@@ -47,7 +48,7 @@
     $.fn.pager = function (_options) {
         var options = new Defaults();
         options = $.extend(options, _options);
-        if (options.totalPage <= 1) return this;
+        if (options.totalPage <= 1 && !options.autoShow) return this;
         return this.each(function () {
             makePager($(this), options);
         });
@@ -56,7 +57,7 @@
         var options = new Defaults();
         options = $.extend(options, _options);
         selector = $(selector);
-        if (options.totalPage <= 1) return selector;
+        if (options.totalPage <= 1 && !options.autoShow) return selector;
         return selector.each(function () {
             makePager($(this), options);
         });
