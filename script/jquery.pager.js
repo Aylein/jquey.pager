@@ -227,6 +227,28 @@
                 }
             }
         }
+        if (options.showNext) {
+            n = options.pageNumber * 1 + 1;
+            p = $("<" + options.tag + "></" + options.tag + ">");
+            p.text(options.nextText).attr("page", n).addClass(sign).addClass(options.nextClass);
+            if (n < options.totalPage * 1 + 1) p.attr("href", makeUrl(options, n));
+            else if (n == options.totalPage * 1 + 1 && options.redirectCurrent) p.attr("href", makeUrl(options, n));
+            else p.attr("href", nourl);
+            makeOnClick(n, p, options);
+            selector.append(p);
+            if (options.showSpace) selector.append(makeSpace(options));
+        }
+        if (options.showLast) {
+            n = options.totalPage * 1;
+            p = $("<" + options.tag + "></" + options.tag + ">");
+            p.text(options.lastText).attr("page", n).addClass(sign).addClass(options.lastClass);
+            if (options.pageNumber < n) p.attr("href", makeUrl(options, n));
+            else if (n == options.pageNumber && options.redirectCurrent) p.attr("href", makeUrl(options, n));
+            else p.attr("href", nourl);
+            makeOnClick(n, p, options);
+            selector.append(p);
+            if (options.showSpace) selector.append(makeSpace(options));
+        }
         if (options.showTotal) {
             p = $("<span></span>");
             n = options.totalText.replace(/-y-/g, options.pageNumber).replace(/-Y-/g, options.totalPage);
@@ -270,28 +292,6 @@
                 }
             })(p, options);
             selector.append(n);
-            if (options.showSpace) selector.append(makeSpace(options));
-        }
-        if (options.showNext) {
-            n = options.pageNumber * 1 + 1;
-            p = $("<" + options.tag + "></" + options.tag + ">");
-            p.text(options.nextText).attr("page", n).addClass(sign).addClass(options.nextClass);
-            if (n < options.totalPage * 1 + 1) p.attr("href", makeUrl(options, n));
-            else if (n == options.totalPage * 1 + 1 && options.redirectCurrent) p.attr("href", makeUrl(options, n));
-            else p.attr("href", nourl);
-            makeOnClick(n, p, options);
-            selector.append(p);
-            if (options.showSpace) selector.append(makeSpace(options));
-        }
-        if (options.showLast) {
-            n = options.totalPage * 1;
-            p = $("<" + options.tag + "></" + options.tag + ">");
-            p.text(options.lastText).attr("page", n).addClass(sign).addClass(options.lastClass);
-            if (options.pageNumber < n) p.attr("href", makeUrl(options, n));
-            else if (n == options.pageNumber && options.redirectCurrent) p.attr("href", makeUrl(options, n));
-            else p.attr("href", nourl);
-            makeOnClick(n, p, options);
-            selector.append(p);
             if (options.showSpace) selector.append(makeSpace(options));
         }
         if (options.showSpace) selector.children().last().remove();
